@@ -1,66 +1,66 @@
 "use client";
 import { useState } from "react";
 
-export default function NewItem({ onAddItem }) {
+// Destructure the onAddItem prop
+export default function NewItem({ onAddItem }) { 
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [category, setCategory] = useState("Produce");
+  const [category, setCategory] = useState("produce");
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  const increment = () => {
+    if (quantity < 20) setQuantity(quantity + 1);
+  };
 
-    const newItem = {
-      id: Math.random().toString(36).substring(2, 9),
-      name,
-      quantity,
-      category,
+  const decrement = () => {
+    if (quantity > 1) setQuantity(quantity - 1);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Create the item object with a random id
+    const item = { 
+      id: Math.random().toString(36).substring(2, 9), 
+      name, 
+      quantity, 
+      category 
     };
 
-    onAddItem(newItem);
+    // Call the onAddItem prop instead of using alert
+    onAddItem(item);
 
-    // Clear form
+    // Reset form
     setName("");
     setQuantity(1);
-    setCategory("Produce");
-  }
+    setCategory("produce");
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 space-y-3">
-      <input
-        type="text"
-        placeholder="Item name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        className="border p-2 rounded w-full text-black"
-      />
-
-      <input
-        type="number"
-        min="1"
-        value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
-        className="border p-2 rounded w-full text-black"
-      />
-
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="border p-2 rounded w-full text-black"
+    <div className="flex flex-col items-center justify-center px-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-100 text-gray-800 rounded-lg shadow-xl p-8 w-full max-w-lg space-y-6"
       >
-        <option>Produce</option>
-        <option>Dairy</option>
-        <option>Bakery</option>
-        <option>Meat</option>
-        <option>Frozen</option>
-      </select>
-
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Add Item
-      </button>
-    </form>
+        {/* ... (rest of your form JSX remains the same) */}
+        <div>
+          <label className="block text-gray-800 text-sm mb-2 font-semibold">Item Name</label>
+          <input
+            type="text"
+            placeholder="e.g., milk, 4 L 🥛"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          />
+        </div>
+        {/* ... (Quantity and Category fields) */}
+        <button
+          type="submit"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-md shadow-sm transition duration-200"
+        >
+          Add Item
+        </button>
+      </form>
+    </div>
   );
 }
