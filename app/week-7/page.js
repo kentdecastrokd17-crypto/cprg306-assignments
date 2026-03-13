@@ -1,24 +1,47 @@
 "use client";
 
-import { useState } from "react";
-import ItemList from "./ItemList";
-import NewItem from "./NewItem";
-import itemsData from "./item.json";
+import { useState, useEffect } from "react";
 
-export default function Page() {
-  const [items, setItems] = useState(itemsData);
+async function fetchMealIdeas(ingredient) {
+  const response = await fetch(
+    `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`
+  );
+  const data = await response.json();
+  return data.meals || [];
+}
 
-  function handleAddItem(newItem) {
-    setItems([...items, newItem]);
+export default function MealIdeas({ ingredient }) {
+  const [meals, setMeals] = useState([]);
+
+  async function loadMealIdeas() {
+    const fetchedMeals = await fetchMealIdeas(ingredient);
+    setMeals(fetchedMeals);
   }
 
+  useEffect(() => {
+    loadMealIdeas();
+  }, [ingredient]);
+
   return (
-    <main className="p-10 bg-gray-600 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Shopping List</h1>
-
-      <NewItem onAddItem={handleAddItem} />
-
-      <ItemList items={items} />
-    </main>
+    <div className="mt-6">
+      <h2 className="text-xl font-bold text-white mb-4">
+        Meal Ideas for: <span className="text-teal-400">{ingredient}</span>
+      </h2>
+      <ul className="space-y-2">
+        {meals.map((meal) => (
+          <li
+            key={meal.idMeal}
+            className="flex items-center gap-4 p-3 bg-teal-900 border border-white rounded-lg shadow-sm"
+          >
+            <img
+              src={meal.strMealThumb}
+              alt={meal.strMeal}
+              className="w-16 h-16 rounded-md object-cover"
+            />
+            <span className="text-white font-medium">{meal.strMeal}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
