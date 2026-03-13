@@ -29,7 +29,8 @@ export default function Page() {
     <main className="p-10 bg-gray-600 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-white">Shopping List + Meal Ideas</h1>
 
-      <div className="flex gap-10">
+      {/* Responsive layout: single column on mobile, two columns on md+ */}
+      <div className="flex flex-col md:flex-row gap-10">
         {/* Left side: NewItem + ItemList */}
         <div className="flex-1">
           <NewItem onAddItem={handleAddItem} />
